@@ -1,0 +1,7 @@
+{
+  "name": "Acme Corp",
+  "geography": ["USA", "EU"],
+  "industry": ["finance"],
+  "products": ["electronics"],
+  "suppliers": ["chemical"]
+}
