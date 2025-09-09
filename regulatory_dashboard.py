@@ -41,21 +41,27 @@ def analyze_profile(profile: dict) -> dict:
     """Return regulatory categories and risks for a profile.
 
     The result is a dict with two keys, ``categories`` and ``risks``,
-    each containing a sorted list of unique values.
+    each containing a sorted list of unique values. The returned dict
+    also contains a ``breakdown`` key with detailed information for each
+    profile aspect.
     """
     categories = set()
     risks = set()
+    breakdown = {key: [] for key in RULESETS}
 
     for key, rules in RULESETS.items():
-        values = profile.get(key, [])
-        for value in values:
+        for value in profile.get(key, []):
             info = rules.get(value, {})
-            categories.update(info.get("categories", []))
-            risks.update(info.get("risks", []))
+            cats = info.get("categories", [])
+            rks = info.get("risks", [])
+            categories.update(cats)
+            risks.update(rks)
+            breakdown[key].append({"value": value, "categories": cats, "risks": rks})
 
     return {
         "categories": sorted(categories),
         "risks": sorted(risks),
+        "breakdown": breakdown,
     }
 
 def main(path: str) -> None:
@@ -70,6 +76,18 @@ def main(path: str) -> None:
     print("\nPotential regulatory risks:")
     for risk in result["risks"]:
         print(f" - {risk}")
+
+    # Detailed breakdown by profile aspect for customer visibility
+    print("\nBreakdown by profile aspect:")
+    for aspect, entries in result["breakdown"].items():
+        if not entries:
+            continue
+        print(f"{aspect.capitalize()}:")
+        for entry in entries:
+            cat_list = ", ".join(entry["categories"]) or "None"
+            risk_list = ", ".join(entry["risks"]) or "None"
+            print(f" - {entry['value']}: categories [{cat_list}] | risks [{risk_list}]")
+        print()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
