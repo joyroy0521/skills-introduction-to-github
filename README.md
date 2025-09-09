@@ -25,6 +25,35 @@ python regulatory_dashboard.py sample_profile.json
 Modify `sample_profile.json` with your own data to evaluate different
 scenarios.
 
+## PFAS Reporting MVP
+
+The repository now contains a reference implementation of a PFAS reporting
+workflow inspired by the business requirements document in this exercise.
+It ingests supplier declarations from a CSV file and produces a JSON report
+aligned to EPA TSCA §8(a)(7) field names.
+
+Run it with:
+
+```bash
+python pfas_reporting.py sample_suppliers.csv report.json --pfas-dict pfas_list.txt
+```
+
+The generated `report.json` summarises supplier responses and lists mapped
+declarations ready for further processing or submission.
+
+## PFAS Reporting Frontend
+
+This repository includes a minimal Flask web interface for generating reports from the browser.
+
+Run it with:
+
+```bash
+python -m pip install flask
+python pfas_frontend.py
+```
+
+Open <http://127.0.0.1:5000> and upload the supplier CSV and optional PFAS dictionary to receive the JSON report.
+
 ---
 
 &copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
